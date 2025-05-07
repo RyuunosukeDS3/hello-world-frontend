@@ -90,110 +90,110 @@ jobs:
           path: .
 
   test:
-  name: Run Tests (Unit + E2E)
-  runs-on: ubuntu-latest
-  needs: build
-  steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 22
-
-    - name: Download dist
-      uses: actions/download-artifact@v4
-      with:
-        name: dist
-        path: dist/
-
-    - name: Restore node_modules cache
-      uses: actions/cache@v3
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node_modules-
-
-    - name: Install Chrome dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          chromium-browser \
-          libxss1 \
-          libappindicator3-1 \
-          libasound2 \
-          libatk-bridge2.0-0 \
-          libatk1.0-0 \
-          libcups2 \
-          libgdk-pixbuf2.0-0 \
-          libnspr4 \
-          libnss3 \
-          libxcomposite1 \
-          libxrandr2 \
-          libgbm1 \
-          libnss3-dev \
-          fonts-liberation \
-          libappindicator3-1 \
-          libnspr4 \
-          libxss1 \
-          xdg-utils \
-          libu2f-udev \
-          libdbus-1-3
-
-    - name: Set Puppeteer Executable Path
-      run: echo "PUPPETEER_EXECUTABLE_PATH=$(which chromium-browser)" >> $GITHUB_ENV
-
-    - name: Run unit tests with coverage
-      run: |
-        npx ng test --watch=false --code-coverage --browsers=ChromeHeadless --no-progress
-      env:
-        CI: true
-
-    - name: Upload unit test coverage
-      uses: actions/upload-artifact@v4
-      with:
-        name: unit-coverage
-        path: coverage/
-
-    - name: Start Angular App in Background
-      run: |
-        npx http-server dist/your-angular-app-name -p 4200 &
-      env:
-        NODE_ENV: test
-
-    - name: Run E2E tests with Puppeteer
-      run: |
-        xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
-        npx ng e2e --watch=false
-      env:
-        CI: true
-
-    - name: Upload e2e test coverage
-      uses: actions/upload-artifact@v4
-      with:
-        name: e2e-coverage
-        path: coverage-e2e/
-
-  trivy-fs:
-    name: Trivy FS Scan (Source Code)
+    name: Run Tests (Unit + E2E)
     runs-on: ubuntu-latest
     needs: build
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run Trivy vulnerability scanner in fs mode
-        run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          trivy plugin install github.com/umax/trivy-plugin-sonarqube
-          trivy fs --format=json --output=trivy.json --exit-code=1 --ignore-unfixed=true .
-          trivy sonarqube trivy.json > trivy-fs.json
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
 
-      - name: Upload trivy-fs.json
+      - name: Download dist
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Restore node_modules cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Install Chrome dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            chromium-browser \
+            libxss1 \
+            libappindicator3-1 \
+            libasound2 \
+            libatk-bridge2.0-0 \
+            libatk1.0-0 \
+            libcups2 \
+            libgdk-pixbuf2.0-0 \
+            libnspr4 \
+            libnss3 \
+            libxcomposite1 \
+            libxrandr2 \
+            libgbm1 \
+            libnss3-dev \
+            fonts-liberation \
+            libappindicator3-1 \
+            libnspr4 \
+            libxss1 \
+            xdg-utils \
+            libu2f-udev \
+            libdbus-1-3
+
+      - name: Set Puppeteer Executable Path
+        run: echo "PUPPETEER_EXECUTABLE_PATH=$(which chromium-browser)" >> $GITHUB_ENV
+
+      - name: Run unit tests with coverage
+        run: |
+          npx ng test --watch=false --code-coverage --browsers=ChromeHeadless --no-progress
+        env:
+          CI: true
+
+      - name: Upload unit test coverage
         uses: actions/upload-artifact@v4
         with:
-          name: trivy-fs.json
-          path: .
+          name: unit-coverage
+          path: coverage/
+
+      - name: Start Angular App in Background
+        run: |
+          npx http-server dist/your-angular-app-name -p 4200 &
+        env:
+          NODE_ENV: test
+
+      - name: Run E2E tests with Puppeteer
+        run: |
+          xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
+          npx ng e2e --watch=false
+        env:
+          CI: true
+
+      - name: Upload e2e test coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-coverage
+          path: coverage-e2e/
+
+    trivy-fs:
+      name: Trivy FS Scan (Source Code)
+      runs-on: ubuntu-latest
+      needs: build
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Run Trivy vulnerability scanner in fs mode
+          run: |
+            curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+            trivy plugin install github.com/umax/trivy-plugin-sonarqube
+            trivy fs --format=json --output=trivy.json --exit-code=1 --ignore-unfixed=true .
+            trivy sonarqube trivy.json > trivy-fs.json
+
+        - name: Upload trivy-fs.json
+          uses: actions/upload-artifact@v4
+          with:
+            name: trivy-fs.json
+            path: .
 
   trivy-image:
     name: Trivy Image Scan
