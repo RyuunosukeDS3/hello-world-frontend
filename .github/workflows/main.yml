@@ -31,7 +31,7 @@ jobs:
         run: npm install
         
       - name: Run linter
-        run: ng lint
+        run: npx ng lint
 
   build:
     name: Build App
@@ -54,7 +54,7 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: Build project
-        run: npm run build
+        run: npx ng build
 
       - name: Upload dist
         uses: actions/upload-artifact@v4
@@ -146,7 +146,7 @@ jobs:
 
       - name: Run unit tests with coverage
         run: |
-          npx ng test --watch=false --code-coverage --browsers=ChromeHeadless --no-progress
+          npx ng test --watch=false --code-coverage --no-progress
         env:
           CI: true
 
@@ -156,16 +156,10 @@ jobs:
           name: unit-coverage
           path: coverage/
 
-      - name: Start Angular App in Background
-        run: |
-          npx http-server dist/your-angular-app-name -p 4200 &
-        env:
-          NODE_ENV: test
 
       - name: Run E2E tests with Puppeteer
         run: |
-          xvfb-run --auto-servernum --server-args='-screen 0 1024x768x24' \
-          npx ng e2e --watch=false
+          npx ng e2e --watch=false --code-coverage
         env:
           CI: true
 
