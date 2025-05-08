@@ -5,6 +5,10 @@
 
 /** @type {import('jest').Config} */
 module.exports = {
-  testMatch: ['<rootDir>/build/**/*.e2e.js'],
+  testMatch: ['<rootDir>/tests/**/*.e2e.ts'],
   testEnvironment: 'node',
+  collectCoverage: true,
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest',
+  },
 };
