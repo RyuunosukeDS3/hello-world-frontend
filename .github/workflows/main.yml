@@ -140,7 +140,7 @@ jobs:
 
       - name: Run E2E tests with Puppeteer
         run: |
-          npx ng e2e --watch=false --code-coverage
+          npx npm run e2e:cov
         env:
           CI: true
 
