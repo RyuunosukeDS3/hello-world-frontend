@@ -2,9 +2,9 @@ FROM node:lts-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
-COPY dist ./dist
+COPY . .
+RUN npm install
 
-RUN npm install --omit=dev --production
+EXPOSE 4200
 
-CMD ["node", "dist/main.js"]
+CMD ["npm", "run", "start", "--", "--configuration", "production", "--host", "0.0.0.0"]

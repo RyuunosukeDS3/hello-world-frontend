@@ -2,8 +2,8 @@ prepare-commit-msg:
   commands:
     commitzen:
       skip: merge
-      only: 
-       - run: test -r ~/.czrc
+      only:
+        - run: test -r ~/.czrc
       interactive: true
       run: git-cz --hook
       env:
@@ -12,4 +12,4 @@ prepare-commit-msg:
 commit-msg:
   commands:
     commitlint:
-      run: commitlint --edit {1} --extends @seniorsistemas/commitlint-config-senior
+      run: commitlint --edit {1} --extends gitmoji
