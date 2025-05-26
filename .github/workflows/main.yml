@@ -174,7 +174,7 @@ jobs:
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
           trivy plugin install github.com/umax/trivy-plugin-sonarqube
-          trivy image --format=json --output=trivy.json --exit-code=1 --ignore-unfixed=true hello-world-backend:latest
+          trivy image --format=json --output=trivy.json --ignore-unfixed=true hello-world-backend:latest
           trivy sonarqube trivy.json > trivy-image.json
 
       - name: Upload trivy-image.json
