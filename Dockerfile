@@ -1,9 +1,9 @@
-FROM node:lts-alpine
+FROM nginx:alpine
 
-WORKDIR /app
-
-COPY . .
+COPY ./dist/hello-world-frontend/browser /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY mime.types /etc/nginx/mime.types
 
 EXPOSE 4200
 
-CMD ["sh", "-c", "npm install && npm run start:prod"]
+CMD ["nginx", "-g", "daemon off;"]
