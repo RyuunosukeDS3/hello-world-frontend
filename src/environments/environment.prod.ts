@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.hello.mizika.duckdns.org/',
+  apiUrl: 'https://api.hello.mizika.duckdns.org',
 };
