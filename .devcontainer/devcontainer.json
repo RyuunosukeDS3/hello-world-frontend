@@ -38,6 +38,7 @@
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",
         "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "material-icon-theme.activeIconPack": "angular",
         "cSpell.enabled": true,
         "sonarlint.connectedMode.connections.sonarcloud": [
           {
