@@ -167,7 +167,7 @@ jobs:
       - name: Run Trivy vulnerability scanner in image mode
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          trivy image --exit-code=1 --ignore-unfixed=true hello-world-backend:latest
+          trivy image --exit-code=1 --ignore-unfixed=true hello-world-frontend:latest
 
 
   sonar:
