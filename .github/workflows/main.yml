@@ -2,10 +2,13 @@ name: DevSecOps Pipeline
 
 on:
   push:
-    branches: [main]
+    branches:
+      - '**'
+    tags-ignore:
+      - '*'
   pull_request:
-    branches: [main]
-
+    branches:
+      - '**'
 jobs:
   lint:
     name: Lint
