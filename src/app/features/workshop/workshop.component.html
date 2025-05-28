@@ -1,0 +1,17 @@
+<div class="workshop-container" [ngClass]="theme">
+  <div class="theme-switcher">
+    <label class="switch">
+      <input
+        type="checkbox"
+        [checked]="theme === 'dark'"
+        (change)="toggleTheme($event)"
+      />
+      <span class="slider round"></span>
+    </label>
+    <span>{{ theme === "dark" ? "Dark Mode" : "Light Mode" }}</span>
+  </div>
+
+  <div class="markdown-container">
+    <markdown [data]="markdownContent"></markdown>
+  </div>
+</div>
