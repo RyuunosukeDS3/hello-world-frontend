@@ -8,6 +8,10 @@ import {
 import { Renderer2 } from '@angular/core';
 import { environment } from '../../../environments/environment';
 
+interface WorkshopComponentWithRenderer extends WorkshopComponent {
+  renderer: Renderer2;
+}
+
 describe('WorkshopComponent', () => {
   let component: WorkshopComponent;
   let fixture: ComponentFixture<WorkshopComponent>;
@@ -31,7 +35,7 @@ describe('WorkshopComponent', () => {
     spyOn(renderer, 'removeClass').and.callThrough();
 
     // Optionally override the renderer on the component if you want
-    (component as any).renderer = renderer;
+    (component as WorkshopComponentWithRenderer).renderer = renderer;
   });
 
   afterEach(() => {

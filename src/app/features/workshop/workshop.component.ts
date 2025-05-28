@@ -15,7 +15,7 @@ export class WorkshopComponent implements OnInit {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly renderer: Renderer2
+    public readonly renderer: Renderer2
   ) {}
 
   ngOnInit() {
