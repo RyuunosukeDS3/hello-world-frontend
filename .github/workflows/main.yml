@@ -187,9 +187,6 @@ jobs:
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
-        with:
-          args: >
-            -Dsonar.externalIssuesReportPaths=trivy/trivy-fs.json,trivy/trivy-image.json
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
