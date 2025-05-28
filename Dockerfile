@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM nginx:stable-alpine3.21-perl
 
 COPY ./dist/hello-world-frontend/browser /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
