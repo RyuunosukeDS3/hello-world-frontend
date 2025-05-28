@@ -6,7 +6,7 @@ on:
       - '**'
     tags-ignore:
       - '*'
-      
+
 jobs:
   lint:
     name: Lint
@@ -80,8 +80,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t hello-world-backend:latest .
-          docker save hello-world-backend:latest -o image.tar
+          docker build -t hello-world-frontend:latest .
+          docker save hello-world-frontend:latest -o image.tar
 
       - name: Upload image.tar
         uses: actions/upload-artifact@v4
@@ -147,11 +147,6 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
           trivy fs --exit-code=1 --ignore-unfixed=true .
 
-      - name: Upload trivy-fs.json
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-fs.json
-          path: trivy-fs.json
 
   trivy-image:
     name: Trivy Image Scan
@@ -174,11 +169,6 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
           trivy image --exit-code=1 --ignore-unfixed=true hello-world-backend:latest
 
-      - name: Upload trivy-image.json
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-image.json
-          path: trivy-image.json
 
   sonar:
     name: SonarCloud Analysis
@@ -194,18 +184,6 @@ jobs:
         with:
           name: coverage
           path: coverage/
-
-      - name: Download trivy-fs.json
-        uses: actions/download-artifact@v4
-        with:
-          name: trivy-fs.json
-          path: trivy/
-
-      - name: Download trivy-image.json
-        uses: actions/download-artifact@v4
-        with:
-          name: trivy-image.json
-          path: trivy/
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
