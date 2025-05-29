@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { HelloComponent } from './hello.component';
@@ -8,18 +9,24 @@ describe('HelloComponent', () => {
   let component: HelloComponent;
   let fixture: ComponentFixture<HelloComponent>;
   let helloServiceSpy: jasmine.SpyObj<HelloService>;
+  let routerSpy: jasmine.SpyObj<Router>;
 
   beforeEach(async () => {
-    const spy = jasmine.createSpyObj('HelloService', ['getMessage']);
+    const helloSpy = jasmine.createSpyObj('HelloService', ['getMessage']);
+    const rSpy = jasmine.createSpyObj('Router', ['navigate']);
 
     await TestBed.configureTestingModule({
       declarations: [HelloComponent],
-      providers: [{ provide: HelloService, useValue: spy }],
+      providers: [
+        { provide: HelloService, useValue: helloSpy },
+        { provide: Router, useValue: rSpy },
+      ],
     }).compileComponents();
 
     helloServiceSpy = TestBed.inject(
       HelloService
     ) as jasmine.SpyObj<HelloService>;
+    routerSpy = TestBed.inject(Router) as jasmine.SpyObj<Router>;
   });
 
   beforeEach(() => {
@@ -48,5 +55,10 @@ describe('HelloComponent', () => {
     fixture.detectChanges();
 
     expect(component.message).toBe('Failed to load message');
+  });
+
+  it('should navigate to /workshop when goToWorkshop is called', () => {
+    component.goToWorkshop();
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/workshop']);
   });
 });

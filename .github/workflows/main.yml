@@ -79,8 +79,8 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t hello-world-backend:latest .
-          docker save hello-world-backend:latest -o image.tar
+          docker build -t hello-world-frontend:latest .
+          docker save hello-world-frontend:latest -o image.tar
 
       - name: Upload image.tar
         uses: actions/upload-artifact@v4
@@ -144,15 +144,8 @@ jobs:
       - name: Run Trivy vulnerability scanner in fs mode
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          trivy plugin install github.com/umax/trivy-plugin-sonarqube
-          trivy fs --format=json --output=trivy.json --exit-code=1 --ignore-unfixed=true .
-          trivy sonarqube trivy.json > trivy-fs.json
+          trivy fs --exit-code=1 --ignore-unfixed=true .
 
-      - name: Upload trivy-fs.json
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-fs.json
-          path: trivy-fs.json
 
   trivy-image:
     name: Trivy Image Scan
@@ -173,15 +166,8 @@ jobs:
       - name: Run Trivy vulnerability scanner in image mode
         run: |
           curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
-          trivy plugin install github.com/umax/trivy-plugin-sonarqube
-          trivy image --format=json --output=trivy.json --ignore-unfixed=true hello-world-backend:latest
-          trivy sonarqube trivy.json > trivy-image.json
+          trivy image --exit-code=1 --ignore-unfixed=true hello-world-frontend:latest
 
-      - name: Upload trivy-image.json
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-image.json
-          path: trivy-image.json
 
   sonar:
     name: SonarCloud Analysis
@@ -198,23 +184,8 @@ jobs:
           name: coverage
           path: coverage/
 
-      - name: Download trivy-fs.json
-        uses: actions/download-artifact@v4
-        with:
-          name: trivy-fs.json
-          path: trivy/
-
-      - name: Download trivy-image.json
-        uses: actions/download-artifact@v4
-        with:
-          name: trivy-image.json
-          path: trivy/
-
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
-        with:
-          args: >
-            -Dsonar.externalIssuesReportPaths=trivy/trivy-fs.json,trivy/trivy-image.json
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
